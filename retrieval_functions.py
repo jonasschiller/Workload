@@ -256,10 +256,11 @@ def get_latency_deviation(data):
         
         if framework == "HPMPC":
             for function in data[i]['function'].unique():
-                function_filter = data[i]['function'] == function
-                help = data[i].loc[bandwidth_filter & function_filter & (data[i]['preprocess'] == 0)]
-                ret.append(get_mean_std(help,'latencies(ms)')) 
-                label.append("HPMPC "+ str(function))
+                for input_size in data[i]['input_size'].unique():
+                    function_filter = data[i]['function'] == function
+                    help = data[i].loc[bandwidth_filter & function_filter & (data[i]['input_size'] == input_size) & (data[i]['preprocess'] == 0)]
+                    ret.append(get_mean_std(help,'latencies(ms)')) 
+                    label.append("HPMPC "+ str(function) + " "+ str(input_size))
         elif framework == "MPyC":
             help = data[i].loc[bandwidth_filter]
             ret.append(get_mean_std(help,'latencies(ms)'))
@@ -273,10 +274,11 @@ def get_latency_deviation(data):
                     label.append("MP-SPDZ "+ protocol + " " + str(input_size))
         else:
             for protocol in data[i]['protocol'].unique():
-                protocol_filter = data[i]['protocol'] == protocol
-                help = data[i].loc[bandwidth_filter & protocol_filter]
-                ret.append(get_mean_std(help,'latencies(ms)')) 
-                label.append("MOTION "+ protocol)
+                for input_size in data[i]['input_size'].unique():
+                    protocol_filter = data[i]['protocol'] == protocol
+                    help = data[i].loc[bandwidth_filter & protocol_filter & (data[i]['input_size'] == input_size)]
+                    ret.append(get_mean_std(help,'latencies(ms)')) 
+                    label.append("MOTION "+ protocol + " " + str(input_size))
     return ret,label
 
 def get_mean_std(data,column):
