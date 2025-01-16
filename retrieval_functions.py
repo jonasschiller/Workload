@@ -7,26 +7,27 @@ import matplotlib as mpl
 from IPython.display import set_matplotlib_formats
 
 def init_plotting():
-    #plt.style.use('fivethirtyeight')
-    plt.rc("text", usetex=True)
-    plt.rc("text.latex", preamble=r'\usepackage{amsmath}')
+    pass
+    # #plt.style.use('fivethirtyeight')
+    # plt.rc("text", usetex=True)
+    # plt.rc("text.latex", preamble=r'\usepackage{amsmath}')
     
-    pr ={"axes.labelsize": 9,               # LaTeX default is 10pt font.
-        "font.size": 9,
-        "legend.fontsize": 7,               # Make the legend/label fonts
-        "xtick.labelsize": 9,               # a little smaller
-        "ytick.labelsize": 9,
-        "errorbar.capsize": 2.5,
-        "font.family": "STIXGeneral",
-        "font.serif": [],                   # blank entries should cause plots
-        "font.sans-serif": [],    
-        }
-    for k, v in pr.items():
-        mpl.rcParams[k] = v
-    #set_matplotlib_formats('retina')
-    #mpl.rcParams["font.family"] = "computer modern serif"
-    # mpl.rcParams["font.serif"] = ["STIX"]
-    mpl.rcParams["mathtext.fontset"] = "stix"
+    # pr ={"axes.labelsize": 9,               # LaTeX default is 10pt font.
+    #     "font.size": 9,
+    #     "legend.fontsize": 7,               # Make the legend/label fonts
+    #     "xtick.labelsize": 9,               # a little smaller
+    #     "ytick.labelsize": 9,
+    #     "errorbar.capsize": 2.5,
+    #     "font.family": "STIXGeneral",
+    #     "font.serif": [],                   # blank entries should cause plots
+    #     "font.sans-serif": [],    
+    #     }
+    # for k, v in pr.items():
+    #     mpl.rcParams[k] = v
+    # #set_matplotlib_formats('retina')
+    # #mpl.rcParams["font.family"] = "computer modern serif"
+    # # mpl.rcParams["font.serif"] = ["STIX"]
+    # mpl.rcParams["mathtext.fontset"] = "stix"
     
 
 def load_data(resultspath,frameworks,experiment,usecase):
@@ -259,8 +260,9 @@ def get_latency_deviation(data):
                 for input_size in data[i]['input_size'].unique():
                     function_filter = data[i]['function'] == function
                     help = data[i].loc[bandwidth_filter & function_filter & (data[i]['input_size'] == input_size) & (data[i]['preprocess'] == 0)]
-                    ret.append(get_mean_std(help,'latencies(ms)')) 
-                    label.append("HPMPC "+ str(function) + " "+ str(input_size))
+                    if not help.empty:
+                        ret.append(get_mean_std(help,'latencies(ms)'))
+                        label.append("HPMPC "+ str(function) + " "+ str(input_size))
         elif framework == "MPyC":
             help = data[i].loc[bandwidth_filter]
             ret.append(get_mean_std(help,'latencies(ms)'))
